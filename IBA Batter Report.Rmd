@@ -1,0 +1,615 @@
+---
+title: "IBA Batting Report Problem Set"
+author: "Aniketh Chedalla"
+date: "2024-01-01"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+batters = read.csv("IBA_Batters.csv")
+```
+
+```{r}
+batters128_2022 = batters[batters$BatterID == 128 & batters$Season == 2022,]
+batters128_2023 = batters[batters$BatterID == 128 & batters$Season == 2023,]
+
+nrow(batters128_2022)
+nrow(batters128_2023)
+```
+
+```{r}
+batters128walk_2022 = batters128_2022[batters128_2022$KorBB == "Walk",]
+batters128walk_2023 = batters128_2022[batters128_2023$KorBB == "Walk",]
+
+nrow(batters128walk_2022)
+nrow(batters128walk_2023)
+```
+
+Batter 128 had 13 walks in 2023 as opposed to 4 in 2022. The increase in walks is relative to the increase in appearances at the plate. 
+
+```{r}
+batters128strikeout_2022 = batters128_2022[batters128_2022$KorBB == "Strikeout",]
+batters128strikeout_2023 = batters128_2023[batters128_2023$KorBB == "Strikeout",]
+
+nrow(batters128strikeout_2022)
+nrow(batters128strikeout_2023)
+```
+
+Batter 128 struck out 39 times in 2023 as opposed to 5 times in 2022. While this seems like a huge increase, this is also relative to how many increased plate appearances Batter 128 has in 2023. 
+
+```{r}
+batters128single2022 = batters128_2022[batters128_2022$PlayResult == "Single",]
+batters128double2022 = batters128_2022[batters128_2022$PlayResult == "Double",]
+batters128triple2022 = batters128_2022[batters128_2022$PlayResult == "Triple",]
+batters128homerun2022 = batters128_2022[batters128_2022$PlayResult == "HomeRun",]
+
+batters128single2023 = batters128_2023[batters128_2023$PlayResult == "Single",]
+batters128double2023 = batters128_2023[batters128_2023$PlayResult == "Double",]
+batters128triple2023 = batters128_2023[batters128_2023$PlayResult == "Triple",]
+batters128homerun2023 = batters128_2023[batters128_2023$PlayResult == "HomeRun",]
+
+batters128hits2022 = nrow(batters128single2022) + nrow(batters128double2022) + nrow(batters128triple2022) + nrow(batters128homerun2022)
+batters128hits2023 = nrow(batters128single2023) + nrow(batters128double2023) + nrow(batters128triple2023) + nrow(batters128homerun2023)
+
+batters128hits2022
+batters128hits2023
+```
+
+Batter 128 had 36 hits in 2023 as opposed to 4 hits in 2022.
+
+```{r}
+batters128runsscored2022 = sum(batters128_2022$RunsScored, na.rm = TRUE)
+batters128runsscored2023 = sum(batters128_2023$RunsScored, na.rm = TRUE)
+
+batters128runsscored2022
+batters128runsscored2023
+```
+
+Batter 128 has an RBI (Runs Batted In) of 20 in 2023 as opposed to 3 in 2022. 
+
+```{r}
+batters128outs2022 = batters128_2022[batters128_2022$PlayResult == "Out",]
+batters128error2022 = batters128_2022[batters128_2022$PlayResult == "Error",]
+batters128fc2022 = batters128_2022[batters128_2022$PlayResult == "FieldersChoice",]
+
+batters128outs2023 = batters128_2023[batters128_2023$PlayResult == "Out",]
+batters128error2023 = batters128_2023[batters128_2023$PlayResult == "Error",]
+batters128fc2023 = batters128_2023[batters128_2023$PlayResult == "FieldersChoice",]
+
+batters128atbats2022 = batters128hits2022 + nrow(batters128strikeout_2022) + nrow(batters128error2022) + nrow(batters128fc2022) + nrow(batters128outs2022)
+batters128atbats2023 = batters128hits2023 + nrow(batters128strikeout_2023) + nrow(batters128error2023) + nrow(batters128fc2023) + nrow(batters128outs2023)
+
+batters128battingavg2022 = batters128hits2022 / batters128atbats2022
+batters128battingavg2023 = batters128hits2023 / batters128atbats2023
+
+batters128battingavg2022
+batters128battingavg2023
+```
+
+Batter 128's batting average for 2023 is 0.288, as opposed to 0.308 in 2022, showing a slight decrease. This is normal given his increased opportunities at the plate this year. 
+
+```{r}
+batters128hbp2022 = batters128_2022[batters128_2022$PitchCall == "HitByPitch",]
+batters128sacflies2022 = batters128_2022[batters128_2022$PlayResult == "Sacrifice",]
+
+batters128hbp2023 = batters128_2023[batters128_2023$PitchCall == "HitByPitch",]
+batters128sacflies2023 = batters128_2023[batters128_2023$PlayResult == "Sacrifice",]
+
+batters128obp2022 = (nrow(batters128walk_2022) + batters128hits2022 + nrow(batters128hbp2022))/(nrow(batters128walk_2022) + batters128atbats2022 + nrow(batters128hbp2022) + nrow(batters128sacflies2022))
+batters128obp2023 = (nrow(batters128walk_2023) + batters128hits2023 + nrow(batters128hbp2023))/(nrow(batters128walk_2023) + batters128atbats2023 + nrow(batters128hbp2023) + nrow(batters128sacflies2023))
+
+batters128obp2022
+batters128obp2023
+```
+
+Batter 128's OBP (On-Base Percentage) was 0.396 in 2023, as opposed to 0.471 in 2022. 
+
+```{r}
+batters128slg2022 = (nrow(batters128single2022) + 2 * nrow(batters128double2022) + 3 * nrow(batters128triple2022) + 4 * nrow(batters128homerun2022))/batters128atbats2022
+batters128slg2023 = (nrow(batters128single2023) + 2 * nrow(batters128double2023) + 3 * nrow(batters128triple2023) + 4 * nrow(batters128homerun2023))/batters128atbats2023
+
+batters128slg2022
+batters128slg2023
+```
+
+Slugging Percentage (SLG) in 2022: 0.384
+Slugging Percentage (SLG) in 2023: 0.488
+
+```{r}
+batters128ops2022 = batters128obp2022 + batters128slg2022
+batters128ops2023 = batters128obp2023 + batters128slg2023
+
+batters128ops2022
+batters128ops2023
+```
+
+On-Base + Slugging Percentage (OPS) in 2022: 0.855
+On-Base + Slugging Percentage (OPS) in 2023: 0.884
+
+```{r}
+batters128iso2022 = batters128slg2022 - batters128battingavg2022
+batters128iso2023 = batters128slg2023 - batters128battingavg2023
+
+batters128iso2022
+batters128iso2023
+```
+
+Isolated Power (ISO) in 2022: 0.077
+Isolated Power (ISO) in 2023: 0.2
+
+```{r}
+batters128plateapp2022 = batters128atbats2022 + nrow(batters128walk_2022) + nrow(batters128sacflies2022) + nrow(batters128hbp2022)
+batters128plateapp2023 = batters128atbats2023 + nrow(batters128walk_2023) + nrow(batters128sacflies2023) + nrow(batters128hbp2023)
+
+batters128walkrate2022 = nrow(batters128walk_2022) / batters128plateapp2022
+batters128walkrate2023 = nrow(batters128walk_2023) / batters128plateapp2023
+
+batters128walkrate2022
+batters128walkrate2023
+```
+
+Walk Rate in 2022: 0.235
+Walk Rate in 2023: 0.087
+
+```{r}
+batters128strikeoutrate2022 = nrow(batters128strikeout_2022) / batters128plateapp2022
+batters128strikeoutrate2023 = nrow(batters128strikeout_2023) / batters128plateapp2023
+
+batters128strikeoutrate2022
+batters128strikeoutrate2023
+```
+
+Strikeout Rate in 2022: 0.294
+Strikeout Rate in 2023: 0.262
+
+```{r}
+batters128babip2022 = (batters128hits2022 - nrow(batters128homerun2022)) / (batters128atbats2022 - nrow(batters128homerun2022) - nrow(batters128strikeout_2022) + nrow(batters128sacflies2022))
+batters128babip2023 = (batters128hits2023 - nrow(batters128homerun2023)) / (batters128atbats2023 - nrow(batters128homerun2023) - nrow(batters128strikeout_2023) + nrow(batters128sacflies2023))
+
+batters128babip2022
+batters128babip2023
+```
+
+Batting Average on Balls in Play (BABIP) in 2022: 0.5
+Batting Average on Balls in Play (BABIP) in 2023: 0.363
+
+Let's compare how Batter 128's stats compare with the others on his team for the 2023 season. 
+
+```{r}
+stats = list()
+
+# Loop through each unique BatterID
+for(batter_id in unique(batters$BatterID)) {
+  current_batter = batters[batters$BatterID == batter_id & batters$Season == 2023,]
+  
+  # Calculations for current batter
+  walks = nrow(current_batter[current_batter$KorBB == "Walk",])
+  strikeouts = nrow(current_batter[current_batter$KorBB == "Strikeout",])
+  
+  single = nrow(current_batter[current_batter$PlayResult == "Single",])
+  double = nrow(current_batter[current_batter$PlayResult == "Double",])
+  triple = nrow(current_batter[current_batter$PlayResult == "Triple",])
+  homerun = nrow(current_batter[current_batter$PlayResult == "HomeRun",])
+  
+  hits = single + double + triple + homerun
+  
+  outs = nrow(current_batter[current_batter$PlayResult == "Out",])
+  error = nrow(current_batter[current_batter$PlayResult == "Error",])
+  fc = nrow(current_batter[current_batter$PlayResult == "FieldersChoice",])
+  
+  atbats = hits + strikeouts + error + fc + outs
+  plateappearances = atbats + walks + hbp + sacflies
+  
+  batting_avg = hits / atbats
+  
+  hbp = nrow(current_batter[current_batter$PitchCall == "HitByPitch",])
+  sacflies = nrow(current_batter[current_batter$PlayResult == "Sacrifice",])
+  
+  obp = (walks + hits + hbp)/(walks + atbats + hbp + sacflies)
+  slg = (single + 2 * double + 3 * triple + 4 * homerun)/atbats
+  ops = obp + slg
+  iso = slg - batting_avg
+  babip = (hits - homerun) / (atbats - homerun - strikeouts + sacflies)
+  
+  walkrate = walks / plateappearances
+  strikeoutrate = strikeouts / plateappearances
+  
+  # Store the results
+  stats[[as.character(batter_id)]] = list(BatterID = batter_id, Walks = walks, Strikeouts = strikeouts, Hits = hits, Outs = outs, OBP = obp, SLG = slg, OPS = ops, Batting_Avg = batting_avg, ISO = iso, BABIP = babip, WalkRate = walkrate, StrikeoutRate = strikeoutrate)
+}
+```
+
+```{r}
+library(ggplot2)
+```
+
+```{r}
+stats_df <- do.call(rbind, stats)
+stats_df <- as.data.frame(stats_df)
+
+# Ensure all numeric columns are of the correct type
+numeric_columns <- c("BatterID", "Walks", "Strikeouts", "Hits", "Outs", "OBP", "SLG", "OPS", "Batting_Avg", "ISO", "BABIP", "WalkRate", "StrikeoutRate")
+stats_df[numeric_columns] <- lapply(stats_df[numeric_columns], function(x) as.numeric(as.character(x)))
+
+# Add a column to indicate if the batter is Batter 128
+stats_df$IsBatter128 <- stats_df$BatterID == 128
+```
+
+```{r}
+stats_df$BatterID <- as.character(stats_df$BatterID)
+
+stats_df$BatterID <- factor(stats_df$BatterID, levels = stats_df$BatterID[order(stats_df$OBP, decreasing = TRUE)])
+
+ggplot(stats_df, aes(x = BatterID, y = OBP, fill = IsBatter128)) +
+  geom_col(show.legend = FALSE) +  
+  geom_text(aes(label = round(OBP, 3)),  
+            position = position_stack(vjust = 1.05),
+            color = "black", size = 3) +
+  scale_fill_manual(values = c("red", "gray")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  labs(title = "OBP of Batter 128 vs. Other Batters", x = "Batter ID", y = "On-base Percentage (OBP)")
+```
+
+```{r}
+stats_df$BatterID <- as.character(stats_df$BatterID)
+
+stats_df$BatterID <- factor(stats_df$BatterID, levels = stats_df$BatterID[order(stats_df$Batting_Avg, decreasing = TRUE)])
+
+ggplot(stats_df, aes(x = BatterID, y = Batting_Avg, fill = IsBatter128)) +
+  geom_col(show.legend = FALSE) +  
+  geom_text(aes(label = round(Batting_Avg, 3)),  
+            position = position_stack(vjust = 1.05),
+            color = "black", size = 3) +
+  scale_fill_manual(values = c("red", "gray")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  labs(title = "Batting_Avg of Batter 128 vs. Other Batters", x = "Batter ID", y = "Batting Average (Batting_Avg)")
+```
+
+```{r}
+stats_df$BatterID <- as.character(stats_df$BatterID)
+
+stats_df$BatterID <- factor(stats_df$BatterID, levels = stats_df$BatterID[order(stats_df$SLG, decreasing = TRUE)])
+
+ggplot(stats_df, aes(x = BatterID, y = SLG, fill = IsBatter128)) +
+  geom_col(show.legend = FALSE) +  
+  geom_text(aes(label = round(SLG, 3)),  
+            position = position_stack(vjust = 1.05),
+            color = "black", size = 3) +
+  scale_fill_manual(values = c("red", "gray")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  labs(title = "SLG of Batter 128 vs. Other Batters", x = "Batter ID", y = "Slugging Percentage (SLG)")
+```
+
+```{r}
+stats_df$BatterID <- as.character(stats_df$BatterID)
+
+stats_df$BatterID <- factor(stats_df$BatterID, levels = stats_df$BatterID[order(stats_df$OPS, decreasing = TRUE)])
+
+ggplot(stats_df, aes(x = BatterID, y = OPS, fill = IsBatter128)) +
+  geom_col(show.legend = FALSE) +  
+  geom_text(aes(label = round(OPS, 3)),  
+            position = position_stack(vjust = 1.05),
+            color = "black", size = 3) +
+  scale_fill_manual(values = c("red", "gray")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  labs(title = "OPS of Batter 128 vs. Other Batters", x = "Batter ID", y = "On-Base + Slugging (OPS)")
+```
+
+```{r}
+stats_df$BatterID <- as.character(stats_df$BatterID)
+
+stats_df$BatterID <- factor(stats_df$BatterID, levels = stats_df$BatterID[order(stats_df$ISO, decreasing = TRUE)])
+
+ggplot(stats_df, aes(x = BatterID, y = ISO, fill = IsBatter128)) +
+  geom_col(show.legend = FALSE) +  
+  geom_text(aes(label = round(ISO, 3)),  
+            position = position_stack(vjust = 1.05),
+            color = "black", size = 3) +
+  scale_fill_manual(values = c("red", "gray")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  labs(title = "ISO of Batter 128 vs. Other Batters", x = "Batter ID", y = "Isolated Power (ISO)")
+```
+
+```{r}
+stats_df$BatterID <- as.character(stats_df$BatterID)
+
+stats_df$BatterID <- factor(stats_df$BatterID, levels = stats_df$BatterID[order(stats_df$BABIP, decreasing = TRUE)])
+
+ggplot(stats_df, aes(x = BatterID, y = BABIP, fill = IsBatter128)) +
+  geom_col(show.legend = FALSE) +  
+  geom_text(aes(label = round(BABIP, 3)),  
+            position = position_stack(vjust = 1.05),
+            color = "black", size = 3) +
+  scale_fill_manual(values = c("red", "gray")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  labs(title = "BABIP of Batter 128 vs. Other Batters", x = "Batter ID", y = "Batting Average on Balls in Play (BABIP)")
+```
+
+When it comes to the calculated statistics above, Batter 128 is among the top 5 in his team.
+
+```{r}
+stats_df$BatterID <- as.character(stats_df$BatterID)
+
+stats_df$BatterID <- factor(stats_df$BatterID, levels = stats_df$BatterID[order(stats_df$Walks, decreasing = TRUE)])
+
+ggplot(stats_df, aes(x = BatterID, y = Walks, fill = IsBatter128)) +
+  geom_col(show.legend = FALSE) +  
+  geom_text(aes(label = round(Walks, 3)),  
+            position = position_stack(vjust = 1.05),
+            color = "black", size = 3) +
+  scale_fill_manual(values = c("red", "gray")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  labs(title = "Walks of Batter 128 vs. Other Batters", x = "Batter ID", y = "Walks")
+```
+
+```{r}
+stats_df$BatterID <- as.character(stats_df$BatterID)
+
+stats_df$BatterID <- factor(stats_df$BatterID, levels = stats_df$BatterID[order(stats_df$WalkRate, decreasing = TRUE)])
+
+ggplot(stats_df, aes(x = BatterID, y = WalkRate, fill = IsBatter128)) +
+  geom_col(show.legend = FALSE) +  
+  geom_text(aes(label = round(WalkRate, 3)),  
+            position = position_stack(vjust = 1.05),
+            color = "black", size = 3) +
+  scale_fill_manual(values = c("red", "gray")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  labs(title = "Walk Rate of Batter 128 vs. Other Batters", x = "Batter ID", y = "Walks per At Bats (WalkRate)")
+```
+
+```{r}
+stats_df$BatterID <- as.character(stats_df$BatterID)
+
+stats_df$BatterID <- factor(stats_df$BatterID, levels = stats_df$BatterID[order(stats_df$Strikeouts, decreasing = TRUE)])
+
+ggplot(stats_df, aes(x = BatterID, y = Strikeouts, fill = IsBatter128)) +
+  geom_col(show.legend = FALSE) +  
+  geom_text(aes(label = round(Strikeouts, 3)),  
+            position = position_stack(vjust = 1.05),
+            color = "black", size = 3) +
+  scale_fill_manual(values = c("red", "gray")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  labs(title = "Strikeouts of Batter 128 vs. Other Batters", x = "Batter ID", y = "Strikeouts")
+```
+
+```{r}
+stats_df$BatterID <- as.character(stats_df$BatterID)
+
+stats_df$BatterID <- factor(stats_df$BatterID, levels = stats_df$BatterID[order(stats_df$StrikeoutRate, decreasing = TRUE)])
+
+ggplot(stats_df, aes(x = BatterID, y = StrikeoutRate, fill = IsBatter128)) +
+  geom_col(show.legend = FALSE) +  
+  geom_text(aes(label = round(StrikeoutRate, 3)),  
+            position = position_stack(vjust = 1.05),
+            color = "black", size = 3) +
+  scale_fill_manual(values = c("red", "gray")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  labs(title = "Strikeout Rate of Batter 128 vs. Other Batters", x = "Batter ID", y = "Strikeouts per At Bats (StrikeoutRate)")
+```
+
+Batter 128 has one of the lowest walk rates and one of the highest strikeout rates amongst his team. Given that his walk and strikeout rate are relatively low, it's suggested he may be more of a power hitter.
+
+```{r}
+stats_df$BatterID <- as.character(stats_df$BatterID)
+
+stats_df$BatterID <- factor(stats_df$BatterID, levels = stats_df$BatterID[order(stats_df$Hits, decreasing = TRUE)])
+
+ggplot(stats_df, aes(x = BatterID, y = Hits, fill = IsBatter128)) +
+  geom_col(show.legend = FALSE) +  
+  geom_text(aes(label = round(Hits, 3)),  
+            position = position_stack(vjust = 1.05),
+            color = "black", size = 3) +
+  scale_fill_manual(values = c("red", "gray")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  labs(title = "Hits of Batter 128 vs. Other Batters", x = "Batter ID", y = "Hits")
+```
+
+```{r}
+stats_df$BatterID <- as.character(stats_df$BatterID)
+
+stats_df$BatterID <- factor(stats_df$BatterID, levels = stats_df$BatterID[order(stats_df$Outs, decreasing = TRUE)])
+
+ggplot(stats_df, aes(x = BatterID, y = Outs, fill = IsBatter128)) +
+  geom_col(show.legend = FALSE) +  
+  geom_text(aes(label = round(Outs, 3)),  
+            position = position_stack(vjust = 1.05),
+            color = "black", size = 3) +
+  scale_fill_manual(values = c("red", "gray")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  labs(title = "Outs of Batter 128 vs. Other Batters", x = "Batter ID", y = "Outs")
+```
+
+Batter 128 is second in hits amongst his team and doesn't hit out as often as some of his other team members. 
+
+```{r}
+batters128bunt2023 = nrow(batters128_2023[batters128_2023$TaggedHitType == "Bunt",])
+batters128gb2023 = nrow(batters128_2023[batters128_2023$TaggedHitType == "GroundBall",])
+batters128ld2023 = nrow(batters128_2023[batters128_2023$TaggedHitType == "LineDrive",])
+batters128fb2023 = nrow(batters128_2023[batters128_2023$TaggedHitType == "FlyBall",])
+batters128popup2023 = nrow(batters128_2023[batters128_2023$TaggedHitType == "Popup",])
+
+hit_type_counts <- c(batters128bunt2023, batters128gb2023, batters128ld2023, batters128fb2023, batters128popup2023)
+hit_type_names <- c("Bunt", "GroundBall", "LineDrive", "FlyBall", "Popup")
+hit_data <- data.frame(Type = hit_type_names, Count = hit_type_counts)
+
+hit_data$Type <- factor(hit_data$Type, levels = hit_data$Type[order(-hit_data$Count)])
+
+ggplot(hit_data, aes(x = Type, y = Count, fill = Type)) +
+  geom_bar(stat = "identity") + 
+  geom_text(aes(label = Count), vjust = -0.3, color = "black") +
+  theme_minimal() + 
+  labs(title = "Hit Types for Batter 128 in 2023", x = "Hit Type", y = "Count") + 
+  scale_fill_brewer(palette = "Set1")
+```
+
+The graph above shows the amounts of each type that Batter 128 hit in 2023. 
+
+```{r}
+batters128bunt2023 = nrow(batters128_2023[batters128_2023$TaggedHitType == "Bunt" & batters128_2023$PlayResult == "Out",])
+batters128gb2023 = nrow(batters128_2023[batters128_2023$TaggedHitType == "GroundBall" & batters128_2023$PlayResult == "Out",])
+batters128ld2023 = nrow(batters128_2023[batters128_2023$TaggedHitType == "LineDrive" & batters128_2023$PlayResult == "Out",])
+batters128fb2023 = nrow(batters128_2023[batters128_2023$TaggedHitType == "FlyBall" & batters128_2023$PlayResult == "Out",])
+batters128popup2023 = nrow(batters128_2023[batters128_2023$TaggedHitType == "Popup" & batters128_2023$PlayResult == "Out",])
+
+hit_type_counts <- c(batters128bunt2023, batters128gb2023, batters128ld2023, batters128fb2023, batters128popup2023)
+hit_type_names <- c("Bunt", "GroundBall", "LineDrive", "FlyBall", "Popup")
+hit_data <- data.frame(Type = hit_type_names, Count = hit_type_counts)
+
+hit_data$Type <- factor(hit_data$Type, levels = hit_data$Type[order(-hit_data$Count)])
+
+ggplot(hit_data, aes(x = Type, y = Count, fill = Type)) +
+  geom_bar(stat = "identity") + 
+  geom_text(aes(label = Count), vjust = -0.3, color = "black") +
+  theme_minimal() + 
+  labs(title = "Hit Types that Resulted in Out for Batter 128 in 2023", x = "Hit Type", y = "Count") + 
+  scale_fill_brewer(palette = "Set1")
+```
+
+The graph above show how many balls of each hit type resulted in an out. Around 57.9% (22/38) of his groundballs, 34.6% (9/26) of his fly balls, 81.9% (9/11) of his popups, and 19.2% (5/26) of his line drives resulted in an out.
+
+```{r}
+batters128fastball2023 = nrow(batters128_2023[batters128_2023$TaggedPitchType == "Fastball",])
+batters128sinker2023 = nrow(batters128_2023[batters128_2023$TaggedPitchType == "Sinker",])
+batters128cutter2023 = nrow(batters128_2023[batters128_2023$TaggedPitchType == "Cutter",])
+batters128curveball2023 = nrow(batters128_2023[batters128_2023$TaggedPitchType == "Curveball",])
+batters128slider2023 = nrow(batters128_2023[batters128_2023$TaggedPitchType == "Slider",])
+batters128changeup2023 = nrow(batters128_2023[batters128_2023$TaggedPitchType == "Changeup",])
+batters128splitter2023 = nrow(batters128_2023[batters128_2023$TaggedPitchType == "Splitter",])
+batters128knuckleball2023 = nrow(batters128_2023[batters128_2023$TaggedPitchType == "Knuckleball",])
+
+pitch_type_counts <- c(batters128fastball2023, batters128sinker2023, batters128cutter2023, batters128curveball2023, batters128slider2023, batters128changeup2023, batters128splitter2023, batters128knuckleball2023)
+pitch_type_names <- c("Fastball", "Sinker", "Cutter", "Curveball", "Slider", "Changeup", "Splitter", "Knuckleball")
+pitch_data <- data.frame(Type = pitch_type_names, Count = pitch_type_counts)
+
+pitch_data$Type <- factor(pitch_data$Type, levels = pitch_data$Type[order(-pitch_data$Count)])
+
+ggplot(pitch_data, aes(x = Type, y = Count, fill = Type)) +
+  geom_bar(stat = "identity") + 
+  geom_text(aes(label = Count), vjust = -0.3, color = "black") +
+  theme_minimal() + 
+  labs(title = "Pitch Types for Batter 128 in 2023", x = "Pitch Type", y = "Count") + 
+  scale_fill_brewer(palette = "Set1")
+```
+
+The graph above displays the count of pitch types that Batter 128 faced in 2023. Let's analyze the rate at which he swung and miss each type. 
+
+```{r}
+batters128fastball2023 = nrow(batters128_2023[batters128_2023$TaggedPitchType == "Fastball" & batters128_2023$PitchCall == "StrikeSwinging",])
+batters128sinker2023 = nrow(batters128_2023[batters128_2023$TaggedPitchType == "Sinker" & batters128_2023$PitchCall == "StrikeSwinging",])
+batters128cutter2023 = nrow(batters128_2023[batters128_2023$TaggedPitchType == "Cutter" & batters128_2023$PitchCall == "StrikeSwinging",])
+batters128curveball2023 = nrow(batters128_2023[batters128_2023$TaggedPitchType == "Curveball" & batters128_2023$PitchCall == "StrikeSwinging",])
+batters128slider2023 = nrow(batters128_2023[batters128_2023$TaggedPitchType == "Slider" & batters128_2023$PitchCall == "StrikeSwinging",])
+batters128changeup2023 = nrow(batters128_2023[batters128_2023$TaggedPitchType == "Changeup" & batters128_2023$PitchCall == "StrikeSwinging",])
+batters128splitter2023 = nrow(batters128_2023[batters128_2023$TaggedPitchType == "Splitter" & batters128_2023$PitchCall == "StrikeSwinging",])
+batters128knuckleball2023 = nrow(batters128_2023[batters128_2023$TaggedPitchType == "Knuckleball" & batters128_2023$PitchCall == "StrikeSwinging",])
+
+pitch_type_counts <- c(batters128fastball2023, batters128sinker2023, batters128cutter2023, batters128curveball2023, batters128slider2023, batters128changeup2023, batters128splitter2023, batters128knuckleball2023)
+pitch_type_names <- c("Fastball", "Sinker", "Cutter", "Curveball", "Slider", "Changeup", "Splitter", "Knuckleball")
+pitch_data <- data.frame(Type = pitch_type_names, Count = pitch_type_counts)
+
+pitch_data$Type <- factor(pitch_data$Type, levels = pitch_data$Type[order(-pitch_data$Count)])
+
+ggplot(pitch_data, aes(x = Type, y = Count, fill = Type)) +
+  geom_bar(stat = "identity") + 
+  geom_text(aes(label = Count), vjust = -0.3, color = "black") +
+  theme_minimal() + 
+  labs(title = "Pitch Types for Batter 128 When Called Strike in 2023", x = "Pitch Type", y = "Count") + 
+  scale_fill_brewer(palette = "Set1")
+```
+
+The graph above shows the amount of pitches that he swung and miss for each pitch type. 
+
+Swinging Strike Rates:
+
+Fastball: 8.5% (20/234)
+Slider: 16.4% (24/146)
+Changeup: 19.7% (13/66)
+Cutter: 37.5% (6/16)
+Sinker: 11.5% (3/26)
+Curveball: 4% (2/50)
+
+```{r}
+inplay = batters128_2023[batters128_2023$PitchCall == "InPlay",]
+
+plot(inplay$Direction, inplay$Angle, col=ifelse(inplay$PlayResult == "Out", 'red', 'blue'),
+     main="Hit Angle", xlab="Direction", ylab="Angle", pch=19)
+legend("topright", legend=c("Out", "Hit"),
+       col=c("red", "blue"), pch=19)
+```
+
+The graph above shows the direction and angle of the ball for each ball that Batter 128 hit, with outs being represented in red. Direction represents the angle formed by the y-axis and the ball's path (in the x-direction). Angle represents the angle formed by the y-axis and the ball's path (in the z-direction).
+
+```{r}
+batters128gb2023 = batters128_2023[batters128_2023$TaggedHitType == "GroundBall",]
+batters128ld2023 = batters128_2023[batters128_2023$TaggedHitType == "LineDrive",]
+batters128fb2023 = batters128_2023[batters128_2023$TaggedHitType == "FlyBall",]
+batters128popup2023 = batters128_2023[batters128_2023$TaggedHitType == "Popup",]
+
+gbexitspeedavg = mean(batters128gb2023$ExitSpeed, na.rm = TRUE)
+ldexitspeedavg = mean(batters128ld2023$ExitSpeed, na.rm = TRUE)
+fbexitspeedavg = mean(batters128fb2023$ExitSpeed, na.rm = TRUE)
+popupexitspeedavg = mean(batters128popup2023$ExitSpeed, na.rm = TRUE)
+
+exitspeedavgs = list(
+  HitType = c("GroundBall", "LineDrive", "FlyBall", "Popup"),
+  AverageExitSpeed = c(gbexitspeedavg, ldexitspeedavg, fbexitspeedavg, popupexitspeedavg)
+)
+
+exitspeedavgstable = data.frame(exitspeedavgs)
+print(exitspeedavgstable)
+```
+
+The table above shows the average exit speed for each type of ball that Batter 128 hit in 2023. 
+
+```{r}
+gbexitspeedmax = max(batters128gb2023$ExitSpeed, na.rm = TRUE)
+ldexitspeedmax = max(batters128ld2023$ExitSpeed, na.rm = TRUE)
+fbexitspeedmax = max(batters128fb2023$ExitSpeed, na.rm = TRUE)
+popupexitspeedmax = max(batters128popup2023$ExitSpeed, na.rm = TRUE)
+
+exitspeedmax = list(
+  HitType = c("GroundBall", "LineDrive", "FlyBall", "Popup"),
+  MaxExitSpeed = c(gbexitspeedmax, ldexitspeedmax, fbexitspeedmax, popupexitspeedmax)
+)
+
+exitspeedmaxtable = data.frame(exitspeedmax)
+print(exitspeedmaxtable)
+```
+
+The table above shows the maximum exit speed for each type of ball that Batter 128 hit in 2023.
+
+```{r}
+plot(inplay$ExitSpeed, inplay$Angle, col=ifelse(inplay$PlayResult == "Out", 'red', 'blue'),
+     main="Exit Speed vs. Hit Angle", xlab="Exit Speed", ylab="Launch Angle", pch=19)
+legend("topright", legend=c("Out", "Hit"),
+       col=c("red", "blue"), pch=19)
+```
+
+The graph above shows the exit speed vs. the launch angle of each ball Batter 128 hit, with red points being represented as outs. 
+
+```{r}
+batters128ss2023 = batters128_2023[batters128_2023$PitchCall == "StrikeSwinging",]
+
+plot(batters128ss2023$PlateLocSide, batters128ss2023$PlateLocHeight, main="Ball Location when Strike Swinging",
+     xlab="Plate Location Side", ylab="Plate Location Height", pch=19, col=rgb(0,0,1,0.5))
+```
+
+The scatterplot above shows the locations above home plate where Batter 128 has swung and miss.

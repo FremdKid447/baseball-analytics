@@ -1,0 +1,405 @@
+---
+title: "IBA Pitching Report Problem Set"
+author: "Aniketh Chedalla"
+date: "2024-01-04"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+pitchers = read.csv("IBA_Pitchers.csv")
+```
+
+```{r}
+pitchers321_2022 = pitchers[pitchers$PitcherID == 321 & pitchers$Season == 2022,]
+pitchers321_2023 = pitchers[pitchers$PitcherID == 321 & pitchers$Season == 2023,]
+
+nrow(pitchers321_2022)
+nrow(pitchers321_2023)
+```
+
+Pitcher 321 threw 487 pitches in 2023 as opposed to 303 pitches in 2022.
+
+```{r}
+pitchers321st_2022 = pitchers321_2022[pitchers321_2022$PitchCall == "StrikeCalled" | pitchers321_2022$PitchCall == "StrikeSwinging",]
+pitchers321st_2023 = pitchers321_2023[pitchers321_2023$PitchCall == "StrikeCalled" | pitchers321_2023$PitchCall == "StrikeSwinging",]
+
+nrow(pitchers321st_2022)
+nrow(pitchers321st_2023)
+```
+
+Pitcher 321 threw 126 strikes in 2023 as opposed to 92 strikes in 2022. 
+
+```{r}
+pitchers321walk_2022 = pitchers321_2022[pitchers321_2022$KorBB == "Walk",]
+pitchers321walk_2023 = pitchers321_2023[pitchers321_2023$KorBB == "Walk",]
+
+nrow(pitchers321walk_2022)
+nrow(pitchers321walk_2023)
+```
+
+Pitcher 321 gave up 11 walks in 2023 as opposed to 1 in 2022. 
+
+```{r}
+pitchers321strikeout_2022 = pitchers321_2022[pitchers321_2022$KorBB == "Strikeout",]
+pitchers321strikeout_2023 = pitchers321_2023[pitchers321_2023$KorBB == "Strikeout",]
+
+nrow(pitchers321strikeout_2022)
+nrow(pitchers321strikeout_2023)
+```
+
+Pitcher 321 struck out 27 batters in 2023 as opposed to 23 in 2022.
+
+```{r}
+pitchers321homerun_2022 = pitchers321_2022[pitchers321_2022$PlayResult == "HomeRun",]
+pitchers321homerun_2023 = pitchers321_2023[pitchers321_2023$PlayResult == "HomeRun",]
+
+nrow(pitchers321homerun_2022)
+nrow(pitchers321homerun_2023)
+```
+
+Pitcher 321 gave up 4 home runs in 2023 as opposed to 1 in 2022. 
+
+```{r}
+pitchers321single_2022 = pitchers321_2022[pitchers321_2022$PlayResult == "Single",]
+pitchers321double_2022 = pitchers321_2022[pitchers321_2022$PlayResult == "Double",]
+pitchers321triple_2022 = pitchers321_2022[pitchers321_2022$PlayResult == "Triple",]
+
+pitchers321single_2023 = pitchers321_2023[pitchers321_2023$PlayResult == "Single",]
+pitchers321double_2023 = pitchers321_2023[pitchers321_2023$PlayResult == "Double",]
+pitchers321triple_2023 = pitchers321_2023[pitchers321_2023$PlayResult == "Triple",]
+
+pitchers321hits_2022 = nrow(pitchers321single_2022) + nrow(pitchers321double_2022) + nrow(pitchers321triple_2022) + nrow(pitchers321homerun_2022)
+pitchers321hits_2023 = nrow(pitchers321single_2023) + nrow(pitchers321double_2023) + nrow(pitchers321triple_2023) + nrow(pitchers321homerun_2023)
+
+pitchers321hits_2022
+pitchers321hits_2023
+```
+
+Pitcher 321 gave up 25 hits in 2023 as opposed to 18 in 2022.
+
+```{r}
+pitchers321runs_2022 = pitchers321_2022[pitchers321_2022$RunsScored != 0,]
+pitchers321totalruns_2022 = sum(pitchers321runs_2022$RunsScored, na.rm = TRUE)
+
+pitchers321runs_2023 = pitchers321_2023[pitchers321_2023$RunsScored != 0,]
+pitchers321totalruns_2023 = sum(pitchers321runs_2023$RunsScored, na.rm = TRUE)
+
+pitchers321totalruns_2022
+pitchers321totalruns_2023
+```
+
+Pitcher 321 has 13 earned runs in 2023 as opposed to 6 in 2022. 
+
+```{r}
+#Pitcher 321 pitched 33 innings in 2023 (I counted this)
+
+pitchers321_2023era = (pitchers321totalruns_2023 / 33) * 9
+pitchers321_2023era
+```
+
+Pitcher 321 had an ERA (Earned Run Average) of 3.545 in 2023. 
+
+```{r}
+pitchers321_2023hbp = pitchers321_2023[pitchers321_2023$PitchCall == "HitByPitch",]
+
+pitchers321_2023fip = ((13 * nrow(pitchers321homerun_2023) + 3*(nrow(pitchers321walk_2023) + nrow(pitchers321_2023hbp)) - 2 * nrow(pitchers321strikeout_2023))/33) + 3.2
+
+pitchers321_2023fip
+```
+
+Pitcher 321's FIP in 2023 was 4.321.
+
+```{r}
+pitchers321_2023whip = (nrow(pitchers321walk_2023) + pitchers321hits_2023)/33
+
+pitchers321_2023whip
+```
+
+Pitcher 321's WHIP in 2023 was 1.091
+
+```{r}
+pitchers321_2023kbb = nrow(pitchers321strikeout_2023) / nrow(pitchers321walk_2023)
+
+pitchers321_2023kbb
+```
+
+Pitcher 321's strikeout to walk ratio is 2.455.
+
+Now let's analyze the types of pitches that Pitcher 321 generally likes to throw.
+
+```{r}
+pitcher321fastball = nrow(pitchers321_2022[pitchers321_2022$TaggedPitchType == "Fastball",])
+pitcher321sinker = nrow(pitchers321_2022[pitchers321_2022$TaggedPitchType == "Sinker",])
+pitcher321cutter = nrow(pitchers321_2022[pitchers321_2022$TaggedPitchType == "Cutter",])
+pitcher321curveball = nrow(pitchers321_2022[pitchers321_2022$TaggedPitchType == "Curveball",])
+pitcher321slider = nrow(pitchers321_2022[pitchers321_2022$TaggedPitchType == "Slider",])
+pitcher321changeup = nrow(pitchers321_2022[pitchers321_2022$TaggedPitchType == "Changeup",])
+pitcher321splitter = nrow(pitchers321_2022[pitchers321_2022$TaggedPitchType == "Splitter",])
+pitcher321knuckleball = nrow(pitchers321_2022[pitchers321_2022$TaggedPitchType == "Knuckleball",])
+
+pitch_type_counts <- c(pitcher321fastball, pitcher321sinker, pitcher321cutter, pitcher321curveball, pitcher321slider, pitcher321changeup, pitcher321splitter, pitcher321knuckleball)
+pitch_type_names <- c("Fastball", "Sinker", "Cutter", "Curveball", "Slider", "Changeup", "Splitter", "Knuckleball")
+pitch_data <- data.frame(Type = pitch_type_names, Count = pitch_type_counts)
+
+pitch_data$Type <- factor(pitch_data$Type, levels = pitch_data$Type[order(-pitch_data$Count)])
+
+ggplot(pitch_data, aes(x = Type, y = Count, fill = Type)) +
+  geom_bar(stat = "identity") + 
+  geom_text(aes(label = Count), vjust = -0.3, color = "black") +
+  theme_minimal() + 
+  labs(title = "Pitch Types for Pitcher 321 in 2022", x = "Pitch Type", y = "Count") +
+  scale_fill_brewer(palette = "Set1")
+```
+
+```{r}
+pitcher321fastballstrike = nrow(pitchers321_2022[pitchers321_2022$TaggedPitchType == "Fastball" & (pitchers321_2022$PitchCall == "StrikeCalled" | pitchers321_2022$PitchCall == "StrikeSwinging"),])
+pitcher321sinkerstrike = nrow(pitchers321_2022[pitchers321_2022$TaggedPitchType == "Sinker" & (pitchers321_2022$PitchCall == "StrikeCalled" | pitchers321_2022$PitchCall == "StrikeSwinging"),])
+pitcher321cutterstrike = nrow(pitchers321_2022[pitchers321_2022$TaggedPitchType == "Cutter" & (pitchers321_2022$PitchCall == "StrikeCalled" | pitchers321_2022$PitchCall == "StrikeSwinging"),])
+pitcher321curveballstrike = nrow(pitchers321_2022[pitchers321_2022$TaggedPitchType == "Curveball" & (pitchers321_2022$PitchCall == "StrikeCalled" | pitchers321_2022$PitchCall == "StrikeSwinging"),])
+pitcher321sliderstrike = nrow(pitchers321_2022[pitchers321_2022$TaggedPitchType == "Slider" & (pitchers321_2022$PitchCall == "StrikeCalled" | pitchers321_2022$PitchCall == "StrikeSwinging"),])
+pitcher321changeupstrike = nrow(pitchers321_2022[pitchers321_2022$TaggedPitchType == "Changeup" & (pitchers321_2022$PitchCall == "StrikeCalled" | pitchers321_2022$PitchCall == "StrikeSwinging"),])
+pitcher321splitterstrike = nrow(pitchers321_2022[pitchers321_2022$TaggedPitchType == "Splitter" & (pitchers321_2022$PitchCall == "StrikeCalled" | pitchers321_2022$PitchCall == "StrikeSwinging"),])
+pitcher321knuckleballstrike = nrow(pitchers321_2022[pitchers321_2022$TaggedPitchType == "Knuckleball" & (pitchers321_2022$PitchCall == "StrikeCalled" | pitchers321_2022$PitchCall == "StrikeSwinging"),])
+
+pitch_type_counts <- c(pitcher321fastballstrike, pitcher321sinkerstrike, pitcher321cutterstrike, pitcher321curveballstrike, pitcher321sliderstrike, pitcher321changeupstrike, pitcher321splitterstrike, pitcher321knuckleballstrike)
+pitch_type_names <- c("Fastball", "Sinker", "Cutter", "Curveball", "Slider", "Changeup", "Splitter", "Knuckleball")
+pitch_data <- data.frame(Type = pitch_type_names, Count = pitch_type_counts)
+
+pitch_data$Type <- factor(pitch_data$Type, levels = pitch_data$Type[order(-pitch_data$Count)])
+
+ggplot(pitch_data, aes(x = Type, y = Count, fill = Type)) +
+  geom_bar(stat = "identity") + 
+  geom_text(aes(label = Count), vjust = -0.3, color = "black") +
+  theme_minimal() + 
+  labs(title = "Pitch Types for Pitcher 321 When Strike Called in 2022", x = "Pitch Type", y = "Count") +
+  scale_fill_brewer(palette = "Set1")
+```
+
+The graphs above show the amount of each pitch type that Pitcher 321 threw in 2022, as well as how many resulted in a strike.
+
+Strike Rates for Each Type:
+
+Fastball: 30.4% (51/168)
+Changeup: 36% (36/100)
+Curveball: 17.2% (5/29)
+
+```{r}
+pitcher321fastball = nrow(pitchers321_2023[pitchers321_2023$TaggedPitchType == "Fastball",])
+pitcher321sinker = nrow(pitchers321_2023[pitchers321_2023$TaggedPitchType == "Sinker",])
+pitcher321cutter = nrow(pitchers321_2023[pitchers321_2023$TaggedPitchType == "Cutter",])
+pitcher321curveball = nrow(pitchers321_2023[pitchers321_2023$TaggedPitchType == "Curveball",])
+pitcher321slider = nrow(pitchers321_2023[pitchers321_2023$TaggedPitchType == "Slider",])
+pitcher321changeup = nrow(pitchers321_2023[pitchers321_2023$TaggedPitchType == "Changeup",])
+pitcher321splitter = nrow(pitchers321_2023[pitchers321_2023$TaggedPitchType == "Splitter",])
+pitcher321knuckleball = nrow(pitchers321_2023[pitchers321_2023$TaggedPitchType == "Knuckleball",])
+
+pitch_type_counts <- c(pitcher321fastball, pitcher321sinker, pitcher321cutter, pitcher321curveball, pitcher321slider, pitcher321changeup, pitcher321splitter, pitcher321knuckleball)
+pitch_type_names <- c("Fastball", "Sinker", "Cutter", "Curveball", "Slider", "Changeup", "Splitter", "Knuckleball")
+pitch_data <- data.frame(Type = pitch_type_names, Count = pitch_type_counts)
+
+pitch_data$Type <- factor(pitch_data$Type, levels = pitch_data$Type[order(-pitch_data$Count)])
+
+ggplot(pitch_data, aes(x = Type, y = Count, fill = Type)) +
+  geom_bar(stat = "identity") + 
+  geom_text(aes(label = Count), vjust = -0.3, color = "black") +
+  theme_minimal() + 
+  labs(title = "Pitch Types for Pitcher 321 in 2023", x = "Pitch Type", y = "Count") +
+  scale_fill_brewer(palette = "Set1")
+```
+
+```{r}
+pitcher321fastballstrike = nrow(pitchers321_2023[pitchers321_2023$TaggedPitchType == "Fastball" & (pitchers321_2023$PitchCall == "StrikeCalled" | pitchers321_2023$PitchCall == "StrikeSwinging"),])
+pitcher321sinkerstrike = nrow(pitchers321_2023[pitchers321_2023$TaggedPitchType == "Sinker" & (pitchers321_2023$PitchCall == "StrikeCalled" | pitchers321_2023$PitchCall == "StrikeSwinging"),])
+pitcher321cutterstrike = nrow(pitchers321_2023[pitchers321_2023$TaggedPitchType == "Cutter" & (pitchers321_2023$PitchCall == "StrikeCalled" | pitchers321_2023$PitchCall == "StrikeSwinging"),])
+pitcher321curveballstrike = nrow(pitchers321_2023[pitchers321_2023$TaggedPitchType == "Curveball" & (pitchers321_2023$PitchCall == "StrikeCalled" | pitchers321_2023$PitchCall == "StrikeSwinging"),])
+pitcher321sliderstrike = nrow(pitchers321_2023[pitchers321_2023$TaggedPitchType == "Slider" & (pitchers321_2023$PitchCall == "StrikeCalled" | pitchers321_2023$PitchCall == "StrikeSwinging"),])
+pitcher321changeupstrike = nrow(pitchers321_2023[pitchers321_2023$TaggedPitchType == "Changeup" & (pitchers321_2023$PitchCall == "StrikeCalled" | pitchers321_2023$PitchCall == "StrikeSwinging"),])
+pitcher321splitterstrike = nrow(pitchers321_2023[pitchers321_2023$TaggedPitchType == "Splitter" & (pitchers321_2023$PitchCall == "StrikeCalled" | pitchers321_2023$PitchCall == "StrikeSwinging"),])
+pitcher321knuckleballstrike = nrow(pitchers321_2023[pitchers321_2023$TaggedPitchType == "Knuckleball" & (pitchers321_2023$PitchCall == "StrikeCalled" | pitchers321_2023$PitchCall == "StrikeSwinging"),])
+
+pitch_type_counts <- c(pitcher321fastballstrike, pitcher321sinkerstrike, pitcher321cutterstrike, pitcher321curveballstrike, pitcher321sliderstrike, pitcher321changeupstrike, pitcher321splitterstrike, pitcher321knuckleballstrike)
+pitch_type_names <- c("Fastball", "Sinker", "Cutter", "Curveball", "Slider", "Changeup", "Splitter", "Knuckleball")
+pitch_data <- data.frame(Type = pitch_type_names, Count = pitch_type_counts)
+
+pitch_data$Type <- factor(pitch_data$Type, levels = pitch_data$Type[order(-pitch_data$Count)])
+
+ggplot(pitch_data, aes(x = Type, y = Count, fill = Type)) +
+  geom_bar(stat = "identity") + 
+  geom_text(aes(label = Count), vjust = -0.3, color = "black") +
+  theme_minimal() + 
+  labs(title = "Pitch Types for Pitcher 321 When Strike Called in 2023", x = "Pitch Type", y = "Count") +
+  scale_fill_brewer(palette = "Set1")
+```
+
+The above graphs show the amount of each pitch type for 2023.
+
+Strike Rates:
+
+Fastball: 26% (88/339)
+Slider: 27.1% (19/70)
+Changeup: 25% (19/76)
+
+As we can see, the strike rates for fastballs, changeups, and curveballs decreased slightly from 2022 to 2023. However, Pitcher 321 threw more sliders in 2023 at a relatively good strike rate. 
+
+Now let's look at the average and max speeds for each pitch type for Pitcher 321 in 2023. 
+
+```{r}
+fastballspeed = pitchers321_2023[pitchers321_2023$TaggedPitchType == "Fastball",]
+sliderspeed = pitchers321_2023[pitchers321_2023$TaggedPitchType == "Slider",]
+changeupspeed = pitchers321_2023[pitchers321_2023$TaggedPitchType == "Changeup",]
+curveballspeed = pitchers321_2023[pitchers321_2023$TaggedPitchType == "Curveball",]
+
+pitcher321fastballavgspeed = mean(fastballspeed$RelSpeed, na.rm = TRUE)
+pitcher321slideravgspeed = mean(sliderspeed$RelSpeed, na.rm = TRUE)
+pitcher321changeupavgspeed = mean(changeupspeed$RelSpeed, na.rm = TRUE)
+pitcher321curveballavgspeed = mean(curveballspeed$RelSpeed, na.rm = TRUE)
+
+speedavgs = list(
+  PitchType = c("Fastball", "Slider", "Changeup", "Curveball"),
+  AverageSpeed = c(pitcher321fastballavgspeed, pitcher321slideravgspeed, pitcher321changeupavgspeed, pitcher321curveballavgspeed)
+)
+
+speedavgstable = data.frame(speedavgs)
+print(speedavgstable)
+```
+
+The table above shows the average speed of each pitch type for Pitcher 321 in 2023.
+
+```{r}
+fastballspeed = pitchers321_2023[pitchers321_2023$TaggedPitchType == "Fastball",]
+sliderspeed = pitchers321_2023[pitchers321_2023$TaggedPitchType == "Slider",]
+changeupspeed = pitchers321_2023[pitchers321_2023$TaggedPitchType == "Changeup",]
+curveballspeed = pitchers321_2023[pitchers321_2023$TaggedPitchType == "Curveball",]
+
+pitcher321fastballmaxspeed = max(fastballspeed$RelSpeed, na.rm = TRUE)
+pitcher321slidermaxspeed = max(sliderspeed$RelSpeed, na.rm = TRUE)
+pitcher321changeupmaxspeed = max(changeupspeed$RelSpeed, na.rm = TRUE)
+pitcher321curveballmaxspeed = max(curveballspeed$RelSpeed, na.rm = TRUE)
+
+speedmaxs = list(
+  PitchType = c("Fastball", "Slider", "Changeup", "Curveball"),
+  MaximumSpeed = c(pitcher321fastballmaxspeed, pitcher321slidermaxspeed, pitcher321changeupmaxspeed, pitcher321curveballmaxspeed)
+)
+
+speedmaxstable = data.frame(speedmaxs)
+print(speedmaxstable)
+```
+
+The table above shows the maximum speed for each pitch type that Pitcher 321 threw in 2023. 
+
+Now let's look at the average and maximum spin rates for each pitch type.
+
+```{r}
+pitcher321fastballavgsr = mean(fastballspeed$SpinRate, na.rm = TRUE)
+pitcher321slideravgsr = mean(sliderspeed$SpinRate, na.rm = TRUE)
+pitcher321changeupavgsr = mean(changeupspeed$SpinRate, na.rm = TRUE)
+pitcher321curveballavgsr = mean(curveballspeed$SpinRate, na.rm = TRUE)
+
+sravg = list(
+  PitchType = c("Fastball", "Slider", "Changeup", "Curveball"),
+  AverageSpinRate = c(pitcher321fastballavgsr, pitcher321slideravgsr, pitcher321changeupavgsr, pitcher321curveballavgsr)
+)
+
+sravgtable = data.frame(sravg)
+print(sravgtable)
+```
+
+The table above shows the average spin rate for each pitch type.
+
+```{r}
+pitcher321fastballmaxsr = max(fastballspeed$SpinRate, na.rm = TRUE)
+pitcher321slidermaxsr = max(sliderspeed$SpinRate, na.rm = TRUE)
+pitcher321changeupmaxsr = max(changeupspeed$SpinRate, na.rm = TRUE)
+pitcher321curveballmaxsr = max(curveballspeed$SpinRate, na.rm = TRUE)
+
+srmax = list(
+  PitchType = c("Fastball", "Slider", "Changeup", "Curveball"),
+  MaximumSpinRate = c(pitcher321fastballmaxsr, pitcher321slidermaxsr, pitcher321changeupmaxsr, pitcher321curveballmaxsr)
+)
+
+srmaxtable = data.frame(srmax)
+print(srmaxtable)
+```
+
+The table above shows the maximum spin rate for each pitch type.
+
+Now let's look at some graphs regarding the angle and location of each pitch type thrown.
+```{r}
+plot(fastballspeed$HorzRelAngle, fastballspeed$VertRelAngle, col=ifelse(fastballspeed$PitchCall == 'StrikeCalled' | fastballspeed$PitchCall == 'StrikeSwinging', 'red', 'blue'),
+     main="Fastball Angle", xlab="Horizontal Release Angle", ylab="Vertical Release Angle", pch=19)
+legend("topright", legend=c("Strike", "Non-Strike"),
+       col=c("red", "blue"), pch=19)
+```
+
+The scatterplot above shows the angles at which Pitcher 321 is releasing his fastballs. The horizontal angle corresponds to positive when the ball is travelling to the right and negative when travelling to the left. The vertical angle pertains to positive when the ball is sloping upwards and negative when the ball is sloping downwards.
+
+```{r}
+plot(sliderspeed$HorzRelAngle, sliderspeed$VertRelAngle, col=ifelse(sliderspeed$PitchCall == 'StrikeCalled' | sliderspeed$PitchCall == 'StrikeSwinging', 'red', 'blue'),
+     main="Slider Angle", xlab="Horizontal Release Angle", ylab="Vertical Release Angle", pch=19)
+legend("topright", legend=c("Strike", "Non-Strike"),
+       col=c("red", "blue"), pch=19)
+```
+
+The scatterplot above shows the release angles at which Pitcher 321 is throwing his sliders. 
+
+```{r}
+plot(changeupspeed$HorzRelAngle, changeupspeed$VertRelAngle, col=ifelse(changeupspeed$PitchCall == 'StrikeCalled' | changeupspeed$PitchCall == 'StrikeSwinging', 'red', 'blue'),
+     main="Changeup Angle", xlab="Horizontal Release Angle", ylab="Vertical Release Angle", pch=19)
+legend("topright", legend=c("Strike", "Non-Strike"),
+       col=c("red", "blue"), pch=19)
+```
+
+The scatterplot above shows the release angles at which Pitcher 321 is throwing his changeups. 
+
+The graphs below show the location at which Pitcher 321 releases the ball for each pitch type. Side refers to the distance from the y-axis from which the pitcher releases the ball, while Height refers to the vertical distance of the ball above home plate when the pitcher releases the ball
+
+```{r}
+plot(fastballspeed$RelSide, fastballspeed$RelHeight, col=ifelse(fastballspeed$PitchCall == 'StrikeCalled', 'red', ifelse(fastballspeed$PitchCall == 'StrikeSwinging', 'green', 'blue')),
+     main="Fastball Release Location", xlab="Side", ylab="Height", pch=19)
+legend("topright", legend=c("StrikeCalled", "StrikeSwinging", "Non-Strike"),
+       col=c("red", "green", "blue"), pch=19)
+```
+
+```{r}
+plot(sliderspeed$RelSide, sliderspeed$RelHeight, col=ifelse(sliderspeed$PitchCall == 'StrikeCalled', 'red', ifelse(sliderspeed$PitchCall == 'StrikeSwinging', 'green', 'blue')),
+     main="Slider Release Location", xlab="Side", ylab="Height", pch=19)
+legend("topright", legend=c("StrikeCalled", "StrikeSwinging", "Non-Strike"),
+       col=c("red", "green", "blue"), pch=19)
+```
+
+```{r}
+plot(changeupspeed$RelSide, changeupspeed$RelHeight, col=ifelse(changeupspeed$PitchCall == 'StrikeCalled', 'red', ifelse(changeupspeed$PitchCall == 'StrikeSwinging', 'green', 'blue')),
+     main="Changeup Release Location", xlab="Side", ylab="Height", pch=19)
+legend("topright", legend=c("StrikeCalled", "StrikeSwinging", "Non-Strike"),
+       col=c("red", "green", "blue"), pch=19)
+```
+
+The scatterplots below show the location above home plate that Pitcher 321 threw to for each pitch type. Side and Height refer to the same properties from above.
+
+```{r}
+plot(fastballspeed$PlateLocSide, fastballspeed$PlateLocHeight, col=ifelse(fastballspeed$PitchCall == 'StrikeCalled', 'red', ifelse(fastballspeed$PitchCall == 'StrikeSwinging', 'green', 'blue')),
+     main="Fastball Plate Location", xlab="Side", ylab="Height", pch=19)
+legend("topright", legend=c("StrikeCalled", "StrikeSwinging", "Non-Strike"),
+       col=c("red", "green", "blue"), pch=19)
+```
+
+```{r}
+plot(sliderspeed$PlateLocSide, sliderspeed$PlateLocHeight, col=ifelse(sliderspeed$PitchCall == 'StrikeCalled', 'red', ifelse(sliderspeed$PitchCall == 'StrikeSwinging', 'green', 'blue')),
+     main="Slider Plate Location", xlab="Side", ylab="Height", pch=19)
+legend("topright", legend=c("StrikeCalled", "StrikeSwinging", "Non-Strike"),
+       col=c("red", "green", "blue"), pch=19)
+```
+
+```{r}
+plot(changeupspeed$PlateLocSide, changeupspeed$PlateLocHeight, col=ifelse(changeupspeed$PitchCall == 'StrikeCalled', 'red', ifelse(changeupspeed$PitchCall == 'StrikeSwinging', 'green', 'blue')),
+     main="Changeup Plate Location", xlab="Side", ylab="Height", pch=19)
+legend("topright", legend=c("StrikeCalled", "StrikeSwinging", "Non-Strike"),
+       col=c("red", "green", "blue"), pch=19)
+```
+
